@@ -23,7 +23,9 @@ int bc_printA(string *str)
 
 int bc_box(int x1, int y1, int x2, int y2)
 {
-  mt_gotoXY(x1, y1);
+  if (mt_gotoXY(x1, y1) == 1)
+    return 1;
+
   cout << "l";
 
   for (int i = 0; i < x2 - 2; i++)
@@ -59,35 +61,37 @@ int bc_box(int x1, int y1, int x2, int y2)
 }
 
 
-int bc_printbigchar(int arr[2], int x, int y, colors bg, colors fg)
+int bc_printbigchar(long int arr[2], int x, int y, colors bg, colors fg)
 {
   mt_setbgcolor(bg);
   mt_setfgcolor(fg);
 
-  mt_gotoXY(x, y);
+  if (mt_gotoXY(x, y) == 1)
+    return 1;
+
   int arr_size = 2;
 
-  for (int j = 0; j < arr_size; j++)
-    for (int i = 0; i < 32; i++) {
+  for (int j = 0; j < arr_size; j++) {
+    for (int i = 0; i <= 32; i++) {
       int byte = (arr[j] >> (i - 1)) & 0x1;
 
-      //cout << byte;
       if (byte == 0)
         cout << " ";
       else
         cout << ACS_CKBOARD;
 
-      if (i % 8 == 0) {
+      if (i % 8 == 0 && i != 32) {
         mt_gotoXY(x++, y);
       }
     }
+  }
 
   cout << endl;
   return 0;
 }
 
 
-int bc_setbigcharpos(int *big, int x, int y, int value)
+int bc_setbigcharpos(long int *big, int x, int y, int value)
 {
   if (x < 1 || x > 8 || y < 1 || y > 8 || value > 1 || value < 0)
     return 1;
@@ -104,7 +108,7 @@ int bc_setbigcharpos(int *big, int x, int y, int value)
 }
 
 
-int bc_getbigcharpos(int *big, int x, int y, int *value)
+int bc_getbigcharpos(long int *big, int x, int y, int *value)
 {
   if (x < 1 || x > 8 || y < 1 || y > 8)
     return 1;
@@ -134,5 +138,94 @@ int bc_bigcharread(int fd, int *big, int need_count, int *count)
   if (*count == -1 || *count != need_count)
     return 1;
 
+  return 0;
+}
+
+
+int bc_printnumber(char number, int x, int y, colors bg, colors fg)
+{
+  switch (number)
+  {
+    case '+': {
+      long int arr[2] = {269488144, 269488383};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    case '0': {
+      long int arr[2] = {2172748287, 4286677377};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    case '1': {
+      long int arr[2] = {303306768, 269488144};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    case '2': {
+      long int arr[2] = {811647999, 4278388236};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    case '3': {
+      long int arr[2] = {811647231, 4290797616};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    case '4': {
+      long int arr[2] = {2172748161, 2155905279};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    case '5': {
+      long int arr[2] = {4278256127, 4286611584};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    case '6': {
+      long int arr[2] = {16843263, 4286677503};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    case '7': {
+      long int arr[2] = {811647231, 50727960};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    case '8': {
+      long int arr[2] = {2172748287, 4286677503};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    case '9': {
+      long int arr[2] = {4286677503, 405823680};
+      if (bc_printbigchar(arr, x, y, bg, fg) == 1)
+        return 1;
+      break;
+    }
+
+    default:
+      return 1;
+      break;
+  }
   return 0;
 }
