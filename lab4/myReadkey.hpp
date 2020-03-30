@@ -1,11 +1,7 @@
 #pragma once
-#include <iostream>
-#include <stdlib.h>
-#include <fcntl.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <termios.h>
-
-using namespace std;
 
 enum keys {
   KEY_LOAD,
@@ -13,6 +9,7 @@ enum keys {
   KEY_RUN,
   KEY_STEP,
   KEY_RESET,
+  KEY_EXIT,
   KEY_ACCUMULATOR,
   KEY_INSTRUCTION,
   KEY_UP,

@@ -1,10 +1,10 @@
-#include "myReadkey.hpp"
+#include "SimpleComputer.hpp"
 
 
 int main()
 {
-  enum keys *key = new keys;
-  rk_readkey(key);
+  mt_clrscr();
+  sc_interface();
 
   return 0;
 }

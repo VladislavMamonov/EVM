@@ -79,6 +79,10 @@ int rk_readkey(enum keys *key)
       *key = KEY_RESET;
       break;
 
+    case 'e':
+      *key = KEY_EXIT;
+      break;
+
     case '0':
       *key = KEY_0;
       break;
@@ -162,7 +166,6 @@ int rk_readkey(enum keys *key)
       rk_mytermrestore();
       return 1;
   }
-
   rk_mytermrestore();
   // cout << buf << endl;
   // cout << *key << endl;
