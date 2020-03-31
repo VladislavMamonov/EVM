@@ -83,47 +83,6 @@ int rk_readkey(enum keys *key)
       *key = KEY_EXIT;
       break;
 
-    case '0':
-      *key = KEY_0;
-      break;
-
-    case '1':
-      *key = KEY_1;
-      break;
-
-    case '2':
-      *key = KEY_2;
-      break;
-
-    case '3':
-      *key = KEY_3;
-      break;
-
-    case '4':
-      *key = KEY_4;
-      break;
-
-    case '5':
-      *key = KEY_5;
-      break;
-
-    case '6':
-      *key = KEY_6;
-      break;
-
-    case '7':
-      *key = KEY_7;
-      break;
-
-    case '8':
-      *key = KEY_8;
-      break;
-
-    case '9':
-      *key = KEY_9;
-      break;
-
-
     case '\E':
       for (int i = 0; i < 2; i++) {
         read(0, &buf, 1);

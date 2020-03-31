@@ -36,3 +36,4 @@ void accumulator_output(int *ram, int cursor_position);
 void instruction_output(int *ram, int cursor_position);
 void flags_output(int *registr);
 int cursor_position_check(int *ram, int *registr, int cursor_position);
+int value_input();

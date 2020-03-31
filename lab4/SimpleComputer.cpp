@@ -314,7 +314,7 @@ void accumulator_output(int *ram, int cursor_position)
     }
   }
 
-  if (ram[cursor_position] > 10 && ram[cursor_position] < 100) {
+  if (ram[cursor_position] > 9 && ram[cursor_position] < 100) {
     cout << "+00" << ram[cursor_position] << " ";
     for (int i = 0, y = 16; i < 2; i++) {
       bc_printnumber('0', 18, y, COLOR_WHITE, COLOR_GRAY);
@@ -322,12 +322,12 @@ void accumulator_output(int *ram, int cursor_position)
     }
   }
 
-  if (ram[cursor_position] > 100 && ram[cursor_position] < 1000) {
+  if (ram[cursor_position] > 99 && ram[cursor_position] < 1000) {
     cout << "+0" << ram[cursor_position] << " ";
     bc_printnumber('0', 18, 16, COLOR_WHITE, COLOR_GRAY);
   }
 
-  if (ram[cursor_position] > 1000 && ram[cursor_position] < 9999) {
+  if (ram[cursor_position] > 999 && ram[cursor_position] < 10000) {
     cout << "+" << ram[cursor_position] << " ";
   }
 
@@ -362,6 +362,11 @@ void flags_output(int *registr)
   string flag_value;
   int *value = new int;
 
+  if (*registr == 0) {
+    cout << "     ";
+    return;
+  }
+
   for (int i = 1; i <= 5; i++) {
     if (sc_regGet(registr, i, value) == 1) {
       switch (i)
@@ -392,6 +397,25 @@ void flags_output(int *registr)
 }
 
 
+int value_input()
+{
+  exit_charset_mode();
+
+  mt_gotoXY(29, 13);
+
+  string strValue;
+  cin >> strValue;
+
+  for (long unsigned int i = 0; i < strValue.size(); i++)
+    strValue[i] = strValue[i + 1];
+
+  int value = atoi(strValue.c_str());
+
+  enter_charset_mode();
+  return value;
+}
+
+
 int sc_interface()
 {
   enter_charset_mode();
@@ -403,6 +427,7 @@ int sc_interface()
   bc_box(11, 67, 25, 3);
   bc_box(14, 67, 25, 3);
   bc_box(17, 54, 38, 10);
+  bc_box(28, 5, 25, 3);
 
   exit_charset_mode();
 
@@ -432,6 +457,8 @@ int sc_interface()
   cout << "F5 - accumulator";
   mt_gotoXY(24, 55);
   cout << "F6 - InstructionCounter";
+  mt_gotoXY(29, 6);
+  cout << "value: ";
 
 
   enter_charset_mode();
@@ -439,29 +466,27 @@ int sc_interface()
 
   int ram[SIZE];
   int *registr = new int;
+  *registr = 0;
   enum keys *key = new keys;
+  int *registr_save = new int;
 
   sc_memoryInit(ram);
-  sc_memorySet(ram, registr, 5, 74);
-  sc_memorySet(ram, registr, 45, 4115);
 
   mt_gotoXY(12, 76);
   int Operation = 0;
   cout << "+" << "0" << Operation << ":" << "00";
 
+  int cursor_position = 0;
+  accumulator_output(ram, 0);
+  instruction_output(ram, 0);
+  memory_output(ram, 0);
 
   while (isExit == false)
   {
-    accumulator_output(ram, 0);
-    instruction_output(ram, 0);
-    memory_output(ram, 0);
     cout << endl;
 
-    int x = 6, y = 6;
-    mt_gotoXY(x, y);
+    mt_gotoXY(6, 6);
     rk_readkey(key);
-
-    int cursor_position = 0;
 
     while (*key > 7 && *key < 12)
     {
@@ -469,53 +494,76 @@ int sc_interface()
 
       switch (*key) {
         case KEY_UP:
-          x--;
           cursor_position -= 10;
           if (cursor_position_check(ram, registr, cursor_position) == 1) cursor_position = 0;
-          accumulator_output(ram, cursor_position);
-          instruction_output(ram, cursor_position);
-          flags_output(registr);
-          memory_output(ram, cursor_position);
           break;
 
         case KEY_DOWN:
-          x++;
           cursor_position += 10;
           if (cursor_position_check(ram, registr, cursor_position) == 1) cursor_position = 0;
-          accumulator_output(ram, cursor_position);
-          instruction_output(ram, cursor_position);
-          flags_output(registr);
-          memory_output(ram, cursor_position);
           break;
 
         case KEY_LEFT:
-          if (cursor_position % 10 == 0) x--, y = 15;
-          else y--;
           cursor_position -= 1;
           if (cursor_position_check(ram, registr, cursor_position) == 1) cursor_position = 0;
-          accumulator_output(ram, cursor_position);
-          instruction_output(ram, cursor_position);
-          flags_output(registr);
-          memory_output(ram, cursor_position);
           break;
 
         case KEY_RIGHT:
-          if (cursor_position % 10 == 9) x++, y = 6;
-          else y++;
           cursor_position += 1;
           if (cursor_position_check(ram, registr, cursor_position) == 1) cursor_position = 0;
-          accumulator_output(ram, cursor_position);
-          instruction_output(ram, cursor_position);
-          flags_output(registr);
-          memory_output(ram, cursor_position);
           break;
 
         default:
           break;
       }
+      accumulator_output(ram, cursor_position);
+      instruction_output(ram, cursor_position);
+      flags_output(registr);
+      memory_output(ram, cursor_position);
     }
-    if (*key == KEY_EXIT)
-      isExit = true;
+
+    switch (*key) {
+      case KEY_EXIT:
+        isExit = true;
+        break;
+
+      case KEY_INSTRUCTION: {
+        int value = value_input();
+        cursor_position = value;
+        if (cursor_position_check(ram, registr, cursor_position) == 1) cursor_position = 0;
+        break;
+      }
+
+      case KEY_ACCUMULATOR: {
+        int value = value_input();
+        sc_memorySet(ram, registr, cursor_position, value);
+        if (cursor_position_check(ram, registr, cursor_position) == 1) cursor_position = 0;
+        break;
+      }
+
+      case KEY_SAVE: {
+        *registr_save = *registr;
+        sc_memorySave(ram, "SaveData.bin");
+        break;
+      }
+
+      case KEY_LOAD:
+        *registr = *registr_save;
+        cout << *registr;
+        sc_memoryLoad(ram, "SaveData.bin");
+        break;
+
+      case KEY_RESET:
+        sc_memoryInit(ram);
+        *registr = 0;
+
+      default:
+        break;
+    }
+    accumulator_output(ram, cursor_position);
+    instruction_output(ram, cursor_position);
+    flags_output(registr);
+    memory_output(ram, cursor_position);
   }
 
   mt_gotoXY(40, 0);
