@@ -4,20 +4,6 @@
 bool isTimer = true;
 bool is_CI = true;
 
-string inttohex(int a)
-{
-    string tmp("");
-    do
-    {
-        int r(a % 16);
-        if (r > 9) { r += (int)'A' - 10; }
-        else { r+= (int)'0'; };
-        tmp = (char)r + tmp;
-        a /= 16;
-    } while (a);
-    return tmp;
-}
-
 
 void TimerOff(int signo)
 {
@@ -360,14 +346,23 @@ void accumulator_output(int *ram, int cursor_position)
 void instruction_output(int *ram, int cursor_position)
 {
   mt_gotoXY(9, 76);
+  exit_charset_mode();
+
+  cout.unsetf(ios::dec);
+  cout.setf(ios::hex);
 
   if (cursor_position < 10) {
-    cout << "+000" << inttohex(cursor_position);
+    cout << "+000" << cursor_position;
   }
 
   if (cursor_position > 10) {
-    cout << "+00" << inttohex(cursor_position);
+    cout << "+00" << cursor_position;
   }
+
+  cout.unsetf(ios::hex);
+  cout.setf(ios::dec);
+
+  enter_charset_mode();
 }
 
 
