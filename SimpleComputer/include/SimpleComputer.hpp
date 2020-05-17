@@ -29,15 +29,20 @@ int sc_memoryLoad(int *ram, char *filename);
 void sc_regInit(int *registr);
 int sc_regSet(int *registr, int flag, int value);
 int sc_regGet(int *registr, int flag, int *value);
-int sc_commandEncode(int *registr, int command, int operand, long int *value);
-int sc_commandDecode(int *registr, long int *value, int *command, int *operand);
+int sc_commandEncode(int *registr, int command, int operand, int *value);
+int sc_commandDecode(int *registr, int *value, int *command, int *operand);
 
 
 int sc_interface();
 void memory_output(int *ram, int cursor_position);
-void accumulator_output(int *ram, int cursor_position);
+void accumulator_output(int accumulator);
+void big_char_output(int *ram, int cursor_position);
 void instruction_output(int *ram, int cursor_position);
 void flags_output(int *registr);
 int cursor_position_check(int *ram, int *registr, int cursor_position);
 int value_input();
 void sc_run(int *ram, int cursor_position);
+
+
+int ALU(int command, int operand);
+int CU(int *ram, int *registr, int cursor_position);
