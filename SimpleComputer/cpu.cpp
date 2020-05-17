@@ -22,7 +22,7 @@ int CU(int *ram, int *registr, int cursor_position)
       break;
     }
 
-    case 11: {
+    case 11: {  //WRITE
       exit_charset_mode();
 
       sc_memoryGet(ram, registr, *operand, user_value);
@@ -37,7 +37,6 @@ int CU(int *ram, int *registr, int cursor_position)
     default:
       break;
   }
-
 
   delete value;
   delete command;
