@@ -226,21 +226,35 @@ void memory_output(int *ram, int cursor_position)
 }
 
 
-void accumulator_output(int accumulator)
+void accumulator_output(int *accumulator)
 {
   mt_gotoXY(6, 76);
+  cout << "      ";  //clear
+  mt_gotoXY(6, 76);
 
-  if (accumulator < 10)
-    cout << "+000" << accumulator;
+  if (*accumulator < 10 && *accumulator > -1)
+    cout << "+000" << *accumulator;
 
-  if (accumulator > 9 && accumulator < 100)
-    cout << "+00" << accumulator;
+  if (*accumulator > 9 && *accumulator < 100)
+    cout << "+00" << *accumulator;
 
-  if (accumulator > 99 && accumulator < 1000)
-    cout << "+0" << accumulator;
+  if (*accumulator > 99 && *accumulator < 1000)
+    cout << "+0" << *accumulator;
 
-  if (accumulator > 999)
-    cout << "+" << accumulator;
+  if (*accumulator > 999)
+    cout << "+" << *accumulator;
+
+  if (*accumulator < 0 && *accumulator > -10)
+    cout << "-000" << abs(*accumulator);
+
+  if (*accumulator < -9 && *accumulator > -100)
+    cout << "-00" << abs(*accumulator);
+
+  if (*accumulator < -99 && *accumulator > -1000)
+    cout << "-0" << abs(*accumulator);
+
+  if (*accumulator < -999)
+    cout << "-" << abs(*accumulator);
 }
 
 
@@ -438,11 +452,12 @@ int sc_interface()
   sc_memoryInit(ram);
 
   mt_gotoXY(12, 76);
-  int Operation = 0;
-  cout << "+" << "0" << Operation << ":" << "00";
+  int operation = 0;
+  cout << "+" << "0" << operation << ":" << "00";
 
   int cursor_position = 0;
-  int accumulator = 0;
+  int *accumulator = new int;
+  *accumulator = 0;
 
   big_char_output(ram, 0);
   instruction_output(ram, 0);
@@ -459,7 +474,7 @@ int sc_interface()
 
     while (is_CI == false) {
       sc_run();
-      if (cursor_position == 99 || CU(ram, registr, cursor_position) == 1) {
+      if (cursor_position == 99 || CU(ram, accumulator, registr, cursor_position) == 1) {
         sc_regSet(registr, CLOCK_IGNORE, 1);
         cursor_position = 0;
         raise(SIGUSR1);
@@ -500,7 +515,7 @@ int sc_interface()
           break;
 
         case KEY_STEP:
-          CU(ram, registr, cursor_position);
+          CU(ram, accumulator, registr, cursor_position);
           cursor_position++;
           if (cursor_position_check(ram, registr, cursor_position) == 1) cursor_position = 0;
           break;

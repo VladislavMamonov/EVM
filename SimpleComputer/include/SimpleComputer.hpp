@@ -35,7 +35,7 @@ int sc_commandDecode(int *registr, int *value, int *command, int *operand);
 
 int sc_interface();
 void memory_output(int *ram, int cursor_position);
-void accumulator_output(int accumulator);
+void accumulator_output(int *accumulator);
 void big_char_output(int *ram, int cursor_position);
 void instruction_output(int *ram, int cursor_position);
 void flags_output(int *registr);
@@ -44,5 +44,5 @@ int value_input();
 void sc_run(int *ram, int cursor_position);
 
 
-int ALU(int command, int operand);
-int CU(int *ram, int *registr, int cursor_position);
+int ALU(int *ram, int *accumulator, int *registr, int *user_value, int command, int operand);
+int CU(int *ram, int *accumulator, int *registr, int cursor_position);
