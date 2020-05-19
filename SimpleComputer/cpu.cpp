@@ -130,6 +130,11 @@ int CU(int *ram, int *accumulator, int *registr, int *instruction)
       return 1;
       break;
 
+
+    case 58:  //JP
+      if (*accumulator % 2 == 0)
+        *instruction = operand;
+
     default:
       break;
   }
