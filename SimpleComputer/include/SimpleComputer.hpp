@@ -24,8 +24,8 @@ using namespace std;
 int sc_memoryInit(int *ram);
 int sc_memorySet(int *ram, int *registr, int address, int value);
 int sc_memoryGet(int *ram, int *registr, int address, int *value);
-int sc_memorySave(int *ram, char *filename);
-int sc_memoryLoad(int *ram, char *filename);
+int sc_memorySave(int *ram, int *registr, char *filename);
+int sc_memoryLoad(int *ram, int *registr, char *filename);
 void sc_regInit(int *registr);
 int sc_regSet(int *registr, int flag, int value);
 int sc_regGet(int *registr, int flag, int *value);
@@ -34,15 +34,16 @@ int sc_commandDecode(int *registr, int *value, int *command, int *operand);
 
 
 int sc_interface();
-void memory_output(int *ram, int cursor_position);
+void memory_output(int *ram, int instruction);
 void accumulator_output(int *accumulator);
-void big_char_output(int *ram, int cursor_position);
-void instruction_output(int *ram, int cursor_position);
+void big_char_output(int *ram, int instruction);
+void instruction_output(int *ram, int instruction);
 void flags_output(int *registr);
-int cursor_position_check(int *ram, int *registr, int cursor_position);
+int instruction_check(int *ram, int *registr, int instruction);
 int value_input();
-void sc_run(int *ram, int cursor_position);
+void file_input(char *filename);
+void sc_run(int *ram, int instruction);
 
 
 int ALU(int *ram, int *accumulator, int *registr, int *user_value, int command, int operand);
-int CU(int *ram, int *accumulator, int *registr, int cursor_position);
+int CU(int *ram, int *accumulator, int *registr, int *instruction);
