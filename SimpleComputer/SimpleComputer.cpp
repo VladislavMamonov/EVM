@@ -365,13 +365,7 @@ int value_input()
   string strValue;
   cin >> strValue;
 
-  for (long unsigned int i = 0; i < strValue.size(); i++) {
-    cout << strValue[i] << endl;
-    //strValue[i] = strValue[i + 1];
-  }
-
   int value = atoi(strValue.c_str());
-  cout << value << endl;
 
   mt_gotoXY(29, 13);
   cout << "    ";       //чистка после ввода

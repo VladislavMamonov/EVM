@@ -96,6 +96,7 @@ int rk_readkey(enum keys *key)
             *key = KEY_ACCUMULATOR;
           if (buf == '7')
             *key = KEY_INSTRUCTION;
+          read(0, &buf, 1);
           break;
 
         case 'A':
