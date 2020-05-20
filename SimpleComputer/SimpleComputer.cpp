@@ -71,8 +71,20 @@ int sc_memoryLoad(int *ram, int *registr, char *filename)
 {
   FILE *data;
 
+  char buf[3];
+  int j = 0;
+
+  for (long unsigned int i = strlen(filename) - 3; i < strlen(filename); i++) {
+    buf[j] = filename[i];
+    j++;
+  }
+
   if ((data = fopen(filename, "rb")) == NULL)
+    return -1;
+
+  if (strcmp(buf, ".sa") == 0) {
     return 1;
+  }
 
   fread(ram, sizeof(int), SIZE, data);
   fread(registr, sizeof(int), 1, data);
@@ -564,7 +576,8 @@ int sc_interface()
 
       case KEY_LOAD: {
         file_input(filename);
-        if (sc_memoryLoad(ram, registr, filename) == 1) break;
+        if (sc_memoryLoad(ram, registr, filename) == 1)
+          asmb(ram, accumulator, registr, &instruction, filename);
         break;
       }
 

@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <fstream>
+#include <vector>
 #include <sstream>
 #include <algorithm>
 #include <signal.h>
@@ -9,6 +11,7 @@
 
 #include "myBigChars.hpp"
 #include "myReadkey.hpp"
+#include "asm.hpp"
 
 using namespace std;
 
