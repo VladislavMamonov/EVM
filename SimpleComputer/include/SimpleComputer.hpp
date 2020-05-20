@@ -11,7 +11,6 @@
 
 #include "myBigChars.hpp"
 #include "myReadkey.hpp"
-#include "asm.hpp"
 
 using namespace std;
 
@@ -50,3 +49,4 @@ void sc_run(int *ram, int instruction);
 
 int ALU(int *ram, int *accumulator, int *registr, int *user_value, int command, int operand);
 int CU(int *ram, int *accumulator, int *registr, int *instruction);
+int asmb(int *ram, int *accumulator, int *registr, int *instruction, char *filename);
