@@ -46,3 +46,12 @@ int mt_setbgcolor(colors color)
 
   return 0;
 }
+
+
+int mt_clrline(int x, int y)
+{
+  mt_gotoXY(x, y);
+  cout << "                                            ";
+
+  return 0;
+}

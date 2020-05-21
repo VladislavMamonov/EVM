@@ -27,3 +27,4 @@ int mt_gotoXY(int x, int y);
 int mt_getscreensize(unsigned short *rows, unsigned short *cols);
 int mt_setfgcolor(colors color);
 int mt_setbgcolor(colors color);
+int mt_clrline(int x, int y);

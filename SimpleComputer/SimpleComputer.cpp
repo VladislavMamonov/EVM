@@ -231,8 +231,7 @@ void memory_output(int *ram, int instruction)
 
 void accumulator_output(int *accumulator)
 {
-  mt_gotoXY(6, 76);
-  cout << "      ";  //clear
+  mt_clrline(6, 76);
   mt_gotoXY(6, 76);
 
   if (*accumulator < 10 && *accumulator > -1)
@@ -320,8 +319,7 @@ void flags_output(int *registr)
   string flag_value;
   int *value = new int;
 
-  mt_gotoXY(15, 77);
-  cout << "             ";  //clear
+  mt_clrline(15, 77);
   mt_gotoXY(15, 77);
 
   for (int i = 1; i <= 5; i++) {
@@ -367,8 +365,7 @@ int value_input()
 
   int value = atoi(strValue.c_str());
 
-  mt_gotoXY(29, 13);
-  cout << "    ";       //чистка после ввода
+  mt_clrline(29, 13);
   enter_charset_mode();
 
   return value;
@@ -382,8 +379,7 @@ void file_input(char *filename)
 
   scanf("%s", filename);
 
-  mt_gotoXY(29, 13);
-  cout << "              ";       //чистка после ввода
+  mt_clrline(29, 13);
   enter_charset_mode();
 }
 
@@ -500,7 +496,6 @@ int sc_interface()
       accumulator_output(accumulator);
       flags_output(registr);
       memory_output(ram, instruction);
-      instruction++;
     }
 
     rk_readkey(key);
