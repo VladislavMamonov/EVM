@@ -83,6 +83,11 @@ int rk_readkey(enum keys *key)
       *key = KEY_EXIT;
       break;
 
+    case '\n':
+      *key = KEY_ENTER;
+      break;
+      
+
     case '\E':
       for (int i = 0; i < 2; i++) {
         read(0, &buf, 1);

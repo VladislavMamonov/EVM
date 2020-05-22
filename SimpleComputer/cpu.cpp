@@ -67,12 +67,10 @@ int CU(int *ram, int *accumulator, int *registr, int *instruction)
   if (sc_memoryGet(ram, registr, *instruction, &value) == 1)
     return 1;
 
-  command = value / 100;
-  operand = value % 100;
-
-  sc_commandEncode(registr, command, operand, &value);
   if (sc_commandDecode(registr, &value, &command, &operand) == 1)
     return 1;
+
+  operation_output(command, operand);
 
   if (command > 29 && command < 34) {
     ALU(ram, accumulator, registr, &user_value, command, operand);
@@ -244,6 +242,7 @@ int asmb(int *ram, int *accumulator, int *registr, int *instruction, char *filen
   }
 
   int address, command, operand;
+  int value;
   int line_n = 0;
 
   for (long unsigned int i = 0; i < vec.size(); i += 3)
@@ -285,7 +284,8 @@ int asmb(int *ram, int *accumulator, int *registr, int *instruction, char *filen
         enter_charset_mode();
         return -1;
       }
-      sc_memorySet(ram, registr, address, command * 100 + operand);
+      sc_commandEncode(registr, command, operand, &value);
+      sc_memorySet(ram, registr, address, value);
     } else
       sc_memorySet(ram, registr, address, stoi(vec[i + 2]));
   }

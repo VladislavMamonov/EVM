@@ -40,6 +40,7 @@ void memory_output(int *ram, int instruction);
 void accumulator_output(int *accumulator);
 void big_char_output(int *ram, int instruction);
 void instruction_output(int *ram, int instruction);
+void operation_output(int command, int operand);
 void flags_output(int *registr);
 int instruction_check(int *ram, int *registr, int instruction);
 int value_input();

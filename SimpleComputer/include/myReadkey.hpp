@@ -16,6 +16,7 @@ enum keys {
   KEY_DOWN,
   KEY_LEFT,
   KEY_RIGHT,
+  KEY_ENTER,
 };
 
 

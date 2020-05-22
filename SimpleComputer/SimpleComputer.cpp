@@ -27,14 +27,19 @@ int sc_memoryInit(int *ram)
 
 int sc_memorySet(int *ram, int *registr, int address, int value)
 {
-  if (address >= 0 && address < SIZE) {
-    ram[address] = value;
-    return 0;
-  }
-  else {
+  if (address < 0 || address >= SIZE) {
     sc_regSet(registr, MEMORY_ACCESS, 1);
     return 1;
   }
+
+  if (value > 32767 || value < -32768) {
+    sc_regSet(registr, OVERFLOW, 1);
+    return 1;
+  }
+
+  ram[address] = value;
+
+  return 0;
 }
 
 
@@ -148,11 +153,6 @@ int sc_commandEncode(int *registr, int command, int operand, int *value)
       return 1;
     }
 
-  if (operand > 99) {
-    sc_regSet(registr, OVERFLOW, 1);
-    return 1;
-  }
-
   *value = (command << 7) | operand;
 
   return 0;
@@ -170,11 +170,6 @@ int sc_commandDecode(int *registr, int *value, int *command, int *operand)
       sc_regSet(registr, UNKNOWN_COMMAND, 1);
       return 1;
     }
-
-  if (*operand > 99) {
-    sc_regSet(registr, UNKNOWN_COMMAND, 1);
-    return 1;
-  }
 
   return 0;
 }
@@ -314,6 +309,18 @@ void instruction_output(int *ram, int instruction)
 }
 
 
+void operation_output(int command, int operand)
+{
+  mt_clrline(12, 76);
+  mt_gotoXY(12, 76);
+
+  if (command < 10) cout << "+0" << command;
+  if (command > 9) cout << "+" << command;
+  if (operand < 10) cout << ":0" << operand;
+  if (operand > 9) cout << ":" << operand;
+}
+
+
 void flags_output(int *registr)
 {
   string flag_value;
@@ -443,6 +450,8 @@ int sc_interface()
   cout << "F5 - accumulator";
   mt_gotoXY(24, 55);
   cout << "F6 - InstructionCounter";
+  mt_gotoXY(25, 55);
+  cout << "ENTER - cell value";
   mt_gotoXY(29, 6);
   cout << "value: ";
 
@@ -457,10 +466,7 @@ int sc_interface()
   char *filename = new char;
 
   sc_memoryInit(ram);
-
-  mt_gotoXY(12, 76);
-  int operation = 0;
-  cout << "+" << "0" << operation << ":" << "00";
+  operation_output(0, 0);
 
   int instruction = 0;
   int *accumulator = new int;
@@ -527,7 +533,6 @@ int sc_interface()
 
         case KEY_STEP:
           CU(ram, accumulator, registr, &instruction);
-          instruction++;
           if (instruction_check(ram, registr, instruction) == 1) instruction = 0;
           break;
 
@@ -546,15 +551,22 @@ int sc_interface()
         isExit = true;
         break;
 
+      case KEY_ACCUMULATOR: {
+        *accumulator = value_input();
+        break;
+      }
+
       case KEY_INSTRUCTION: {
-        int value = value_input();
-        instruction = value;
+        instruction = value_input();
         if (instruction_check(ram, registr, instruction) == 1) instruction = 0;
         break;
       }
 
-      case KEY_ACCUMULATOR: {
+      case KEY_ENTER: {
         int value = value_input();
+        int command = value / 100;
+        int operand = value % 100;
+        sc_commandEncode(registr, command, operand, &value);
         sc_memorySet(ram, registr, instruction, value);
         if (instruction_check(ram, registr, instruction) == 1) instruction = 0;
         break;
@@ -568,8 +580,9 @@ int sc_interface()
 
       case KEY_LOAD: {
         file_input(filename);
-        if (sc_memoryLoad(ram, registr, filename) == 1)
+        if (sc_memoryLoad(ram, registr, filename) == 1) {
           asmb(ram, accumulator, registr, &instruction, filename);
+        }
         break;
       }
 
