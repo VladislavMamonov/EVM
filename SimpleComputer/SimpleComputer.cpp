@@ -391,7 +391,7 @@ void file_input(char *filename)
 }
 
 
-void sc_run()
+void run_timer()
 {
   isTimer = true;
   struct itimerval nval, oval;
@@ -486,7 +486,7 @@ int sc_interface()
     signal(SIGUSR1, CI_On);
 
     while (is_CI == false) {
-      sc_run();
+      run_timer();
       if (instruction == 99 || CU(ram, accumulator, registr, &instruction) == 1) {
         sc_regSet(registr, CLOCK_IGNORE, 1);
         raise(SIGUSR1);

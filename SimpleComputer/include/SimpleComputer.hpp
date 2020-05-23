@@ -45,7 +45,7 @@ void flags_output(int *registr);
 int instruction_check(int *ram, int *registr, int instruction);
 int value_input();
 void file_input(char *filename);
-void sc_run(int *ram, int instruction);
+void run_timer(int *ram, int instruction);
 
 
 int ALU(int *ram, int *accumulator, int *registr, int *user_value, int command, int operand);
